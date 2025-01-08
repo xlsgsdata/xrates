@@ -1,6 +1,4 @@
 var rates = [];
-google.charts.load('current', {packages: ['corechart']});
-//google.charts.setOnLoadCallback(showChart);
 
 // Onload -------------------------------------------------------------------------------------------
 function loadPage() {
@@ -19,6 +17,7 @@ function getPage() {
 		var navi = "contact";		
 	}
 	naviSelect(navi);
+	google.charts.load('current', {packages: ['corechart']});
 }
 
 function naviSelect(navi) {
