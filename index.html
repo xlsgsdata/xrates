@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head> 
+    <title>XRates</title>
+    <base target="_top">
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="style.css">   
+	<script src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+
+<body onload="loadPage()">
+
+	<div id="container">
+
+	<!-- header and nav -------------------------------------------------------------------------->
+	<div class="header_tag">
+		<div class="header_content">
+			<div class="header_left">
+				<img class="toplogo" src="pics/logo.png"></img>
+				<div id="logo_text">WORLD CURRENCIES</div>
+			</div>		
+			<div class="header_right">
+				<ul id="menu">
+					<li><a id="home" href="" target="_top">Home</a></li>
+					<li><a id="about" href="about.html" target="_top">About</a></li>
+					<li><a id="contact" href="contact.html" target="_top">Contact</a></li>								
+				</ul>
+			</div>
+		</div>
+	</div>	
+
+	<!-- advert -------------------------------------------------------------------------------- >	
+	<div class="row col ad">
+		<a href="" target="_blank">
+		<img src="pics/wise.png">
+		</a>
+	</div>
+	
+	<!-- converter -------------------------------------------------------------------------------->
+	<div class="row col">
+	<div class="header dark">Currency Converter</div>
+	<div class="converter")>
+		<div class="frame">
+			<div class="subframe">
+				<label for="basecur">From</label>
+				<select id="basecur" onchange="convertCurrency(this)" disabled=true</select>	
+				<input id="baseval" onchange="convertCurrency(this)" disabled=true oninput="clearAmount(this)" type="text" min="0" step="1">
+			</div>
+
+			<div class="mid">
+				<div class="arrow" onclick="swapcur()">
+				<img src="pics/arrow.png">
+				</div>
+				<div class="go" onclick="convertCurrency('null')">GO</div>
+			</div>
+
+			<div class="subframe">
+				<label for="quotecur">To</label>
+				<select id="quotecur" onchange="convertCurrency(this)" disabled=true></select>				
+				<input id="quoteval" onchange="convertCurrency(this)" disabled=true oninput="clearAmount(this)" type="text" min="0" step="1">
+			</div>
+		</div>
+	</div>
+	<div id="message">Select currencies to show rates and chart</div>	
+	<div id="exchange"></div>
+	<div id="lastupdate"></div>
+	</div>
+
+	<!-- advert -------------------------------------------------------------------------------- >	
+	<div class="row col ad">
+		<a href="https://www.forextester.com/idevaffiliate/idevaffiliate.php?id=4258" target="_blank">
+		<img src="pics/FxTester_longthin.png">
+		<a>
+	</div>
+	
+	<!-- chart area  -------------------------------------------------------------------------------->		
+	<div id="chartarea" class="row">
+		<div class="chartheader light">
+			<div id="chartTitle">FX Chart</div>
+		</div>			
+		
+		<div class="chartpercent">
+			<span id="percent"></span>
+		</div>
+		
+		<div class="chart">
+			<div id="FXchart"></div>
+		</div>
+		<div class="period">
+			<button id="1M" onclick="setPeriod(this)">1M</button>
+			<button id="3M" onclick="setPeriod(this)">3M</button>
+			<button id="6M" onclick="setPeriod(this)">6M</button>
+			<button id="1Y" onclick="setPeriod(this)">1Y</button>
+			<button id="2Y" onclick="setPeriod(this)">2Y</button>		
+		</div>
+	</div>
+
+	<!-- rates table  -------------------------------------------------------------------------------->		
+	<div id="ratesarea" class="row col">	
+		<div class="header dark">Exchange Rates
+			<img id="foldunfold" src="pics/fold.png" onclick="showhiderates()">
+		</div>
+		
+		<div class="tbl">
+			<table id="ratestbl">
+			</table>
+		</div>			
+	</div>
+	
+	<!-- popular pairs -------------------------------------------------------------------------------->	
+	<div id="pairs" class="row fill">
+		<div class="header light">Popular Pairs</div>
+		<div class="col pairslist">
+			<button class="pair" onclick="setpair(this)">EUR / USD</button>
+			<button class="pair" onclick="setpair(this)">USD / JPY</button>
+			<button class="pair" onclick="setpair(this)">GBP / USD</button>
+			<button class="pair" onclick="setpair(this)">AUD / USD</button>
+			<button class="pair" onclick="setpair(this)">EUR / GBP</button>
+			<button class="pair" onclick="setpair(this)">USD / CAD</button>
+			<button class="pair" onclick="setpair(this)">GBP / EUR</button>
+			<button class="pair" onclick="setpair(this)">USD / CHF</button>
+			<button class="pair" onclick="setpair(this)">USD / HKD</button>
+			<button class="pair" onclick="setpair(this)">EUR / JPY</button>
+			<button class="pair" onclick="setpair(this)">USD / CNY</button>
+			<button class="pair" onclick="setpair(this)">EUR / PLN</button>
+		</div>
+	</div>
+	
+	<!-- advert -------------------------------------------------------------------------------- >	
+	<div class="row col ad">
+		<a href="" target="_blank">
+		<img src="pics/wise.png">
+		</a>
+	</div>
+	
+	<!-- pairs table -------------------------------------------------------------------------------->		
+	<div id="pairsrates" class="row col">
+		<div class="header dark">Latest Pair Rates</div>	
+		<div class="tbl">
+			<table id="pairstbl">
+			<tr><th>Pair</th><th class="tblrate">Rate</th><th class="tblchange">Change</th></tr>
+			<tr><td>EUR / USD</td><td></td><td></td></tr>
+			<tr><td>USD / JPY</td><td></td><td></td></tr>
+			<tr><td>GBP / USD</td><td></td><td></td></tr>
+			<tr><td>AUD / USD</td><td></td><td></td></tr>
+			<tr><td>EUR / GBP</td><td></td><td></td></tr>
+			<tr><td>USD / CAD</td><td></td><td></td></tr>
+			<tr><td>GBP / EUR</td><td></td><td></td></tr>
+			<tr><td>USD / CHF</td><td></td><td></td></tr>
+			<tr><td>USD / HKD</td><td></td><td></td></tr>
+			<tr><td>EUR / JPY</td><td></td><td></td></tr>
+			<tr><td>USD / CNY</td><td></td><td></td></tr>
+			<tr><td>EUR / PLN</td><td></td><td></td></tr>
+			</table>
+		</div>
+	</div>
+
+	<!-- advert -------------------------------------------------------------------------------->	
+	<div class="row col ad">
+		<a href="https://www.forextester.com/idevaffiliate/idevaffiliate.php?id=4258" target="_blank">
+		<img src="pics/FxTester_long.png">
+		</a>
+	</div>
+	
+	<footer>XRates &#169 2024</footer>	
+	</div>
+</body>
+<script src="./script.js"></script>
+</html>
