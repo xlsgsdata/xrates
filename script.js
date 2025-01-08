@@ -623,11 +623,11 @@ const currencies = [
 
 // List of flags
 const flags = [
-'EU',
-'US',
-'GB',
-'CA',
-'JP',
+'eu',
+'us',
+'gb',
+'ca',
+'jp',
 '',
 'AE',
 'AF',
