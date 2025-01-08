@@ -390,7 +390,7 @@ function showRates() {
 				var rcode = rcur.substring(0, 3);
 				var rprice = getCurPrice(rcode);
 				var row = table.insertRow(table.rows.length);
-				var rflag= "pics/flags/" + flags[r] + ".png";
+				var rflag= "pics/flags/" + flags[r].toLowerCase() + ".png";
 				var cell = row.insertCell(0);
 				cell.innerHTML = "<img src='" + rflag + "'>";
 				var cell = row.insertCell(1);
@@ -400,7 +400,7 @@ function showRates() {
 				cell.className = "tbl1currate";			
 				cell.innerText = (rprice/price).toFixed(2);
 			} else {
-				var flag= "pics/flags/" + flags[r] + ".png";
+				var flag = "pics/flags/" + flags[r].toLowerCase() + ".png";
 				table.rows[0].cells[0].innerHTML = "<img src='" + flag + "'>";
 			}
 		}
@@ -623,11 +623,11 @@ const currencies = [
 
 // List of flags
 const flags = [
-'eu',
-'us',
-'gb',
-'ca',
-'jp',
+'EU',
+'US',
+'GB',
+'CA',
+'JP',
 '',
 'AE',
 'AF',
