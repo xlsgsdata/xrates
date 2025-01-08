@@ -390,7 +390,7 @@ function showRates() {
 				var rcode = rcur.substring(0, 3);
 				var rprice = getCurPrice(rcode);
 				var row = table.insertRow(table.rows.length);
-				var rflag= "pics/flags/" + flags[r] + ".png";
+				var rflag= "xrates/pics/flags/" + flags[r] + ".png";
 				var cell = row.insertCell(0);
 				cell.innerHTML = "<img src='" + rflag + "'>";
 				var cell = row.insertCell(1);
