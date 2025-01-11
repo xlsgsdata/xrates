@@ -7,6 +7,7 @@
 	<meta charset="UTF-8" />
 	<link rel="stylesheet" type="text/css" href="style.css">   
 	<script src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 
 <body onload="loadPage()">
@@ -23,8 +24,8 @@
 			<div class="header_right">
 				<ul id="menu">
 					<li><a id="home" href="" target="_top">Home</a></li>
-					<li><a id="about" href="about" target="_top">About</a></li>
-					<li><a id="contact" href="contact" target="_top">Contact</a></li>								
+					<li><a id="about" href="about.html" target="_top">About</a></li>
+					<li><a id="contact" href="contact.html" target="_top">Contact</a></li>								
 				</ul>
 			</div>
 		</div>
@@ -45,20 +46,22 @@
 			<div class="subframe">
 				<label for="basecur">From</label>
 				<select id="basecur" onchange="convertCurrency(this)" disabled=true</select>	
-				<input id="baseval" onchange="convertCurrency(this)" disabled=true oninput="clearAmount(this)" type="text" min="0" step="1">
+				<input id="baseval" oninput="convertCurrency(this)" type="text" min="0" step="1" disabled=true>
 			</div>
 
 			<div class="mid">
 				<div class="arrow" onclick="swapcur()">
 				<img src="pics/arrow.png">
 				</div>
-				<div class="go" onclick="convertCurrency('null')">GO</div>
+				<div class="clear" onclick="clearContents()">
+					<div class="x">X</div>
+				</div>
 			</div>
 
 			<div class="subframe">
 				<label for="quotecur">To</label>
 				<select id="quotecur" onchange="convertCurrency(this)" disabled=true></select>				
-				<input id="quoteval" onchange="convertCurrency(this)" disabled=true oninput="clearAmount(this)" type="text" min="0" step="1">
+				<input id="quoteval" oninput="convertCurrency(this)" type="text" min="0" step="1" disabled=true>
 			</div>
 		</div>
 	</div>
