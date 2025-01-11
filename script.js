@@ -2,22 +2,22 @@ var rates = [];
 
 // Onload -------------------------------------------------------------------------------------------
 function loadPage() {
-	getRates();		
 	getPage(); 
 }
 
 // navigation -------------------------------------------------------------------------------------------
 function getPage() {
 	var p = window.location.pathname;
-	if (p.match('/contact')) {
-		var navi = "contact";			
+	if (p.match('/index')) {
+		var navi = "home";
+		getRates();		
+		google.charts.load('current', {packages: ['corechart']});		
 	} else if (p.match('/about')) {
 		var navi = "about";
 	} else {
-		var navi = "home";	
+		var navi = "contact";		
 	}
 	naviSelect(navi);
-	google.charts.load('current', {packages: ['corechart']});
 }
 
 function naviSelect(navi) {
@@ -45,6 +45,7 @@ function getCurrencies() {
 //get data ------------------------------------------------------------------------------------------------------------
 async function getData () {
 	const token = "1234";	
+	const enc_token = encryptWithAES(token);
 	const url = "https://script.google.com/macros/s/AKfycbxt1ctnZpRu2EJwIUcmP41iBR2GeKfJgVxWHNAAMzJf31g7Tr_c5ThWXpFbr5mHjQXiCw/exec"
 	+ "?token=" + token;
 	
@@ -52,6 +53,11 @@ async function getData () {
 	.then(response => response.text())
 	return response;
 }
+
+const encryptWithAES = (text) => {
+  const passphrase = '123';
+  return CryptoJS.AES.encrypt(text, passphrase).toString();
+};
 
 function getRates() {
 	getData().then(response => {
@@ -93,57 +99,97 @@ function getPrevRate(cur) {
 			break;
 		}
 	}	
-	
 }
 
 // convert currency -----------------------------------------------------------------------------------------------------------
-function convertCurrency (el) {
-	let baseval = document.getElementById("baseval").value;
-	let quoteval = document.getElementById("quoteval").value;
+function convertCurrency(e) {
 	
-	if (baseval != "") {
-		baseval = baseval.replace(",","");
-		document.getElementById("baseval").value = numberWithCommas(Number(baseval).toFixed(2));
-	}
-	
-	if (quoteval != "") {
-		quoteval = quoteval.replace(",","");
-		document.getElementById("quoteval").value = numberWithCommas(Number(quoteval).toFixed(2));
-	}
-	
-	if (el.id=="basecur" || el.id=="quotecur") {
+	// remove message below the converter
+	if (e.id=="basecur" || e.id=="quotecur") {
 		document.getElementById("exchange").innerText = "";	
 	}
 	
-	let basecur = document.getElementById("basecur").value;
-	let quotecur = document.getElementById("quotecur").value;
+	// check if numeric
+	if (e.id=="baseval" || e.id=="quoteval") {
+		if (e.value=="") {
+			clearContents();
+		} else if ( isNaN(e.value) || isNaN(parseFloat(e.value)) ) {  
+			var eval = e.value;
+			e.value = eval.substring(0, eval.length - 1);	
+			return;
+		}
+	}
 	
+	// get currencys
+	let basecur = document.getElementById("basecur").value;
+	let quotecur = document.getElementById("quotecur").value;	
+	
+	// show rates
 	if (basecur!="" || quotecur!="") {
 		showRates();
 	}
-	
-	if (basecur!="" && quotecur!="") {
-		if (el.id=="quoteval") {
-			var amount = quoteval;
-			var baseprice = getRate(quotecur);		
-			var quoteprice = getRate(basecur);				
-			var target = document.getElementById("baseval");			
-		} else {  //when chaging value of base or quote currency, or base amount
-			var amount = baseval;
-			var baseprice = getRate(basecur);	
-			var quoteprice = getRate(quotecur);		
-			updateExchange(basecur,quotecur,baseprice,quoteprice);			
-			var target = document.getElementById("quoteval");	
-		}		
 		
-		var targetval = amount*quoteprice/baseprice;
-		if (targetval!=0) {
-			target.value = numberWithCommas(Number(targetval).toFixed(2));
+	// convert currency now
+	if (basecur!="" && quotecur!="") {	
+		let baseval = document.getElementById("baseval").value;
+		let quoteval = document.getElementById("quoteval").value;	
+		var baseprice = getRate(basecur);	
+		var quoteprice = getRate(quotecur);	
+		updateExchange(basecur,quotecur,baseprice,quoteprice);		
+			
+		if (baseval!="" || quoteval!="") {
+
+			if (e.id=="baseval" || e.id=="basecur") {
+				if (baseval!="") {
+					var amount = baseval;
+					var target = document.getElementById("quoteval");
+				} else if (quoteval!="") {
+					amount = quoteval;
+					var target = document.getElementById("baseval");
+					var baseprice = getRate(quotecur);		
+					var quoteprice = getRate(basecur);
+				}
+			} else if (e.id=="quoteval" || e.id=="quotecur") {
+				if (quoteval!="") {
+				amount = quoteval;
+				var target = document.getElementById("baseval");
+				var baseprice = getRate(quotecur);		
+				var quoteprice = getRate(basecur);	
+				} else if (baseval!="") {
+					var amount = baseval;
+					var target = document.getElementById("quoteval");
+				}					
+			}
+						
+			var targetval = amount * quoteprice / baseprice;
+			if (target) {
+				target.value = formatNumber(targetval);		
+			}			
 		}
 	}
 }
 
-function numberWithCommas(x) {
+function formatNumber(num) {		
+	if (Number.isInteger(num)) {
+		var fix = 2;
+	} else {
+		// set number of decimals if < 1 to ensure at least 2 digits after 0s (example 0.000032)
+		var numzeros = -Math.floor( Math.log10(Number(num)) + 1 );  // number of 0s after the dot
+		if (num < 1 && numzeros > 0) {	
+			fix = numzeros + 2;
+		} else {
+			fix = 2;
+		}
+	}
+	return Number(num).toFixed(fix);
+}
+
+function clearContents() {
+	document.getElementById("baseval").value = "";
+	document.getElementById("quoteval").value = "";
+}
+
+function numberWithCommas(x) {  // NOT used anymore - creates many problems!!!!!!!!!!!!!!!!
     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
 
@@ -179,14 +225,6 @@ function swapcur() {
 	document.getElementById("quotecur").value = basecur;
 	var el = document.getElementById("basecur");
 	convertCurrency (el);
-}
-
-function clearAmount(el) {
-	if (el.id == "baseval") {
-		document.getElementById("quoteval").value = "";
-	} else {
-		document.getElementById("baseval").value = "";
-	}
 }
 
 function updateExchange(basecur,quotecur,baseprice,quoteprice) {
@@ -288,7 +326,7 @@ function showChart(mydata,days) {
 			//}
 		},
 		vAxis: {
-			format:'#,###0.000'
+			format:'#,####0.0000'
 			//gridlines: {count: 5}
 		}
 	};
@@ -390,7 +428,7 @@ function showRates() {
 				var rcode = rcur.substring(0, 3);
 				var rprice = getCurPrice(rcode);
 				var row = table.insertRow(table.rows.length);
-				var rflag= "pics/flags/" + flags[r].toLowerCase() + ".png";
+				var rflag= "pics/flags/" + flags[r] + ".png";
 				var cell = row.insertCell(0);
 				cell.innerHTML = "<img src='" + rflag + "'>";
 				var cell = row.insertCell(1);
@@ -398,9 +436,9 @@ function showRates() {
 				cell.innerText = rcur;
 				var cell = row.insertCell(2);
 				cell.className = "tbl1currate";			
-				cell.innerText = (rprice/price).toFixed(2);
+				cell.innerText = (rprice/price).toFixed(6);
 			} else {
-				var flag = "pics/flags/" + flags[r].toLowerCase() + ".png";
+				var flag= "pics/flags/" + flags[r] + ".png";
 				table.rows[0].cells[0].innerHTML = "<img src='" + flag + "'>";
 			}
 		}
@@ -428,7 +466,7 @@ function setpair(el) {
 	document.getElementById("basecur").value = baseName;
 	document.getElementById("quotecur").value = quoteName;	
 	window.scrollTo(0, 0);
-	convertCurrency('null');
+	convertCurrency(document.getElementById("basecur"));
 }
 
 function getPairRates() {
