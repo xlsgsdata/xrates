@@ -8,14 +8,14 @@ function loadPage() {
 // navigation -------------------------------------------------------------------------------------------
 function getPage() {
 	var p = window.location.pathname;
-	if (p.match('/index')) {
-		var navi = "home";
-		getRates();		
-		google.charts.load('current', {packages: ['corechart']});		
+	if (p.match('/contact')) {
+		var navi = "contact";	
 	} else if (p.match('/about')) {
 		var navi = "about";
 	} else {
-		var navi = "contact";		
+		var navi = "home";
+		getRates();		
+		google.charts.load('current', {packages: ['corechart']});			
 	}
 	naviSelect(navi);
 }
