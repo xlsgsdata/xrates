@@ -428,7 +428,7 @@ function showRates() {
 				var rcode = rcur.substring(0, 3);
 				var rprice = getCurPrice(rcode);
 				var row = table.insertRow(table.rows.length);
-				var rflag= "pics/flags/" + flags[r] + ".png";
+				var rflag= "pics/flags/" + flags[r].toLowerCase()  + ".png";
 				var cell = row.insertCell(0);
 				cell.innerHTML = "<img src='" + rflag + "'>";
 				var cell = row.insertCell(1);
@@ -438,7 +438,7 @@ function showRates() {
 				cell.className = "tbl1currate";			
 				cell.innerText = (rprice/price).toFixed(6);
 			} else {
-				var flag= "pics/flags/" + flags[r] + ".png";
+				var flag= "pics/flags/" + flags[r].toLowerCase()  + ".png";
 				table.rows[0].cells[0].innerHTML = "<img src='" + flag + "'>";
 			}
 		}
