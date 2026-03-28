@@ -368,7 +368,9 @@ function setPeriod(el){
 	} else if (el.id == "1Y") {
 		var days = 365;		
 	} else if (el.id == "2Y") {
-		var days = 730;		
+		var days = 730;	
+	} else if (el.id == "3Y") {
+		var days = 1095;	
 	}
 	sessionStorage.setItem("days", days);
 	let basecode = getCurCode('basecur');
@@ -386,7 +388,9 @@ function getPeriod(days){
 	} else if (days == 365) {
 		return '1Y';	
 	} else if (days == 730) {
-		return '2Y';	
+		return '2Y';
+	} else if (days == 1095) {
+		return '3Y';
 	}
 }
 
